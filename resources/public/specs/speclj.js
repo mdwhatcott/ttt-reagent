@@ -9,7 +9,7 @@
  Each run produced/touches a timestamp file, .specljs-timestamp
  */
 
-var nsPrefix = "app"
+var nsPrefix = "ttt-reagent"
 var fs = require("fs");
 var p = require('webpage').create();
 var system = require('system');
@@ -62,7 +62,7 @@ findUpdatedSpecs = function (rdeps, deps) {
 buildReverseDeps = function (deps) {
   var rdeps = {};
   for(var ns in deps.idToPath_) {
-    if(ns.startsWith("ttt_reagent")) {
+    if(ns.startsWith(nsPrefix)) {
       var file = deps.idToPath_[ns];
       var requires = deps.dependencies_[file].requires
       for(var i = 0; i < requires.length; i++) {
