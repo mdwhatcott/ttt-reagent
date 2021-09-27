@@ -1,0 +1,13 @@
+{:run-cmd     "phantomjs resources/public/specs/speclj.js"
+ :development {:cache-analysis true
+               :optimizations  :none
+               :output-dir     "resources/public/cljs/"
+               :output-to      "resources/public/cljs/dev.js"
+               :pretty-print   true
+               :source-map     true
+               :sources        [#_"spec/cljc" "spec/cljs" #_"src/cljc" "src/cljs"]
+               :specs          true
+               :verbose        false
+               ;:main           "lemon.main"
+               :watch-fn       ttt-reagent.cljs/on-dev-compiled
+               }}
