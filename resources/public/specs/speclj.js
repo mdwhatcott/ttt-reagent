@@ -9,7 +9,7 @@
  Each run produced/touches a timestamp file, .specljs-timestamp
  */
 
-var nsPrefix = "ttt-reagent"
+var nsPrefix = "ttt_reagent"
 var fs = require("fs");
 var p = require('webpage').create();
 var system = require('system');
