@@ -1,4 +1,7 @@
-(ns ttt-reagent.core)
+(ns ttt-reagent.core
+  (:require [goog.dom :as gdom]
+            [reagent.core :as reagent :refer [atom]]
+            [reagent.dom :as rdom]))
 
-(defn something-cljs []
-  "cljs")
+(defonce state (atom {}))
+

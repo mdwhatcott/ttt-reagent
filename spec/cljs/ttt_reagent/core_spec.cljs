@@ -6,7 +6,4 @@
 (describe "A ClojureScript test"
   (it "fails. Fix it!"
     (should= 0 0))
-
-  (it "imports stuff"
-    (should= "cljs" (ttt-reagent.core/something-cljs)))
   )
