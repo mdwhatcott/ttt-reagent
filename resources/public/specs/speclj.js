@@ -62,7 +62,7 @@ findUpdatedSpecs = function (rdeps, deps) {
 buildReverseDeps = function (deps) {
   var rdeps = {};
   for(var ns in deps.idToPath_) {
-    if(ns.startsWith(nsPrefix)) {
+    if(ns.startsWith("ttt_reagent")) {
       var file = deps.idToPath_[ns];
       var requires = deps.dependencies_[file].requires
       for(var i = 0; i < requires.length; i++) {
