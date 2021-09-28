@@ -6,8 +6,15 @@
 
 (defonce state (reagent/atom {}))
 
+(defn screen []
+  [:div
+   [components/hello-world]
+   [components/arena]])
+
 (defn ^:export main []
   (println "Hello, from main!")
-  (rdom/render [components/hello-world] (js/document.getElementById "app")))
+  (rdom/render
+    [screen]
+    (js/document.getElementById "app")))
 
 (main)
