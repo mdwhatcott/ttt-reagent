@@ -127,5 +127,19 @@
           (assert-fill-color (:loser components/COLOR) [1 3 5] boxes)
           (assert-fill-color (:empty components/COLOR) [7 8] boxes)))
       )
+
+    (context "When starting over"
+      (before (click-box! 0)
+              (click-box! 1))
+
+      (it "resets the game"
+        (let [button (components/start-over)
+              click  (:on-click (second button))
+              _      (click)
+              mark   (:mark @components/game)
+              grid   (:grid @components/game)
+              moves  (:moves grid)]
+          (should= mark :X)
+          (should= 0 (count moves)))))
     )
   )

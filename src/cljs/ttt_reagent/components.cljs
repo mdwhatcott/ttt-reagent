@@ -89,3 +89,8 @@
       (concat
         (make-boxes grid)
         (make-marks grid)))))
+
+(defn start-over []
+  (let [on-click (fn start-over-button-click [e]
+                   (reset! game (new-game 3)))]
+    [:button {:on-click on-click} "New Game"]))

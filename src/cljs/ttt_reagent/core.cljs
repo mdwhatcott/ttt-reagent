@@ -6,7 +6,8 @@
 
 (defn screen []
   [:div
-   [components/arena]])
+   [components/arena]
+   [components/start-over]])
 
 (defn ^:export main []
   (println "Hello, from main!")
