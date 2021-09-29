@@ -52,7 +52,7 @@
     (context "after first turn by X"
       (before (click-box 0))
 
-      (it "renders the selected box without an on-click handler and with a different background"
+      (it "renders the selected box without an on-click handler"
         (let [rendered    (components/arena)
               parsed      (parse-arena rendered 3)
               clicked-box (first (:boxes parsed))
@@ -81,6 +81,29 @@
           (should= (int (:x attributes)) (:x box-config))
           (should= (int (:y attributes)) (:y box-config))
           (should= "X" text)))
+      )
+
+    (context "After X and O both take a turn"
+      (before (click-box 0)
+              (click-box 1))
+
+      (it "the player/mark gets switched back to 'X'"
+        (should= :X (:mark @components/game)))
+
+      (it "renders an 'O' in the box that was clicked second"
+        (let [rendered    (components/arena)
+              parsed      (parse-arena rendered 3)
+              clicked-box (second (:boxes parsed))
+              box-config  (second clicked-box)
+
+              mark        (second (:marks parsed))
+              tag         (first mark)
+              attributes  (second mark)
+              text        (get mark 2)]
+          (should= :text tag)
+          (should= (int (:x attributes)) (:x box-config))
+          (should= (int (:y attributes)) (:y box-config))
+          (should= "O" text)))
       )
     )
   )

@@ -35,13 +35,14 @@
         empty-cells (:empty-cells grid)]
     (contains? empty-cells (cartesian->index width x y))))
 
-(defn make-grid-box [x y pending-click?]
-  [:rect {:width    0.9
-          :height   0.9
-          :x        x
-          :y        y
-          :fill     (if pending-click? "grey" "white")
-          :on-click (if pending-click? (make-on-click-for-box x y))}])
+(defn make-grid-box [x y grid]
+  (let [pending-click?  (yet-to-be-clicked? x y)]
+    [:rect {:width    0.9
+            :height   0.9
+            :x        x
+            :y        y
+            :fill     (if pending-click? "grey" "white")
+            :on-click (if pending-click? (make-on-click-for-box x y))}]))
 
 (defn make-mark [cell mark]
   (let [x (rem cell 3)
@@ -49,13 +50,13 @@
     [:text {:x           (+ 0.1 x)
             :y           (+ 0.8 y)
             :font-size   "1px"
-            :font-family "arial"} (name mark)]))
+            :font-family "monospaced"} (name mark)]))
 
 (defn make-boxes [grid]
   (let [width (:width grid)]
     (for [y (range width)
           x (range width)]
-      (make-grid-box x y (yet-to-be-clicked? x y)))))
+      (make-grid-box x y grid))))
 
 (defn make-marks [grid]
   (for [[cell mark] (:filled-by-cell grid)]
@@ -68,7 +69,8 @@
 
 (defn arena []
   (let [grid (:grid @game)]
-    (vec (concat
-           (make-svg grid)
-           (make-boxes grid)
-           (make-marks grid)))))
+    (into
+      (make-svg grid)
+      (concat
+        (make-boxes grid)
+        (make-marks grid)))))
