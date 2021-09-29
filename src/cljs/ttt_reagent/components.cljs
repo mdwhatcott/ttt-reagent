@@ -5,8 +5,8 @@
 
 (def COLOR
   {:winner "darkseagreen"
-   :loser "lightsalmon"
-   :empty "lightsteelblue"})
+   :loser  "lightsalmon"
+   :empty  "lightsteelblue"})
 
 (defn new-game [grid-width]
   {:grid (ttt.grid/new-grid grid-width)
@@ -51,7 +51,7 @@
           :else,,,,,,,,,, (:empty COLOR))))
 
 (defn make-grid-box [x y grid]
-  (let [pending-click?  (yet-to-be-clicked? x y)]
+  (let [pending-click? (yet-to-be-clicked? x y)]
     [:rect {:width    0.9
             :height   0.9
             :x        x

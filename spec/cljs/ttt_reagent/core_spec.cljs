@@ -1,11 +1,9 @@
 (ns ttt-reagent.core-spec
   (:require-macros [speclj.core :refer [describe context before it should=]])
   (:require [speclj.core]
-            [ttt-reagent.components :as components]
-            [cljs.pprint :as pprint]))
+            [ttt-reagent.components :as components]))
 
 (defn parse-arena [arena grid-width]
-  #_(pprint/pprint arena)
   (let [box-count (* grid-width grid-width)]
     {:root       (first arena)
      :attributes (second arena)
