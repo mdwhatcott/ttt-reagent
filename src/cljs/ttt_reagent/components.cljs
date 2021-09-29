@@ -3,10 +3,12 @@
     [ttt.grid]
     [reagent.core :as reagent]))
 
-(defonce game
-  (reagent/atom
-    {:grid (ttt.grid/new-grid 3)
-     :mark :X}))
+(defn new-game [grid-width]
+  {:grid (ttt.grid/new-grid grid-width)
+   :mark :X})
+
+(defonce grid-width (reagent/atom 3))
+(defonce game (reagent/atom (new-game @grid-width)))
 
 ; TODO: figure out why defining this from the test code causes compilation failure. "Caused by: clojure.lang.ExceptionInfo: No such namespace: ttt-grid, could not locate ttt_grid.cljs, ttt_grid.cljc, or JavaScript source providing "ttt-grid" (Please check that namespaces with dashes use underscores in the ClojureScript file name) in file spec/cljs/ttt_reagent/core_spec.cljs {:tag :cljs/analysis-error}"
 (defn place-on-grid! [mark on]
@@ -14,7 +16,7 @@
     (swap! game assoc :grid (ttt.grid/place mark on grid))))
 
 (defn make-on-click-for-box [x y]
-  (fn rect-click [e]
+  (fn rect-click [_e]
     [x y]))
 
 (defn cartesian->index [width x y]
@@ -44,6 +46,3 @@
       (for [y (range width)
             x (range width)]
         (make-grid-box x y (yet-to-be-clicked? x y))))))
-
-(defn hello-world []
-  [:h1 "Hello, world!"])

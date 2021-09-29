@@ -6,7 +6,6 @@
 
 (defn screen []
   [:div
-   [components/hello-world]
    [components/arena]])
 
 (defn ^:export main []
