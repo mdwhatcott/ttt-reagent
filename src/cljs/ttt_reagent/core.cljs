@@ -4,8 +4,6 @@
             [reagent.dom :as rdom]
             [ttt-reagent.components :as components]))
 
-(defonce state (reagent/atom {}))
-
 (defn screen []
   [:div
    [components/hello-world]
