@@ -77,7 +77,7 @@
   (for [[cell mark] (:filled-by-cell grid)]
     (make-mark cell mark)))
 
-(defn make-svg [grid]
+(defn make-svg [_grid]
   [:svg {:view-box "0 0 3 3"
          :width    500
          :height   500}])
