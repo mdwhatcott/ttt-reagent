@@ -35,14 +35,24 @@
         empty-cells (:empty-cells grid)]
     (contains? empty-cells (cartesian->index width x y))))
 
+(defn box-fill-color [x y grid]
+  (let [winner          (:winner grid)
+        index           (cartesian->index 3 x y)
+        placed          (get (:filled-by-cell grid) index)
+        is-winning-box? (and (some? winner) (= winner placed))
+        is-losing-box?  (and (some? winner) (some? placed) (not= winner placed))]
+    (cond is-winning-box? "darkseagreen"
+          is-losing-box?, "lightsalmon"
+          :else,,,,,,,,,, "lightsteelblue")))
+
 (defn make-grid-box [x y grid]
   (let [pending-click?  (yet-to-be-clicked? x y)]
     [:rect {:width    0.9
             :height   0.9
             :x        x
             :y        y
-            :fill     (if pending-click? "grey" "white")
-            :on-click (if pending-click? (make-on-click-for-box x y))}]))
+            :fill     (box-fill-color x y grid)
+            :on-click (when pending-click? (make-on-click-for-box x y))}]))
 
 (defn make-mark [cell mark]
   (let [x (rem cell 3)

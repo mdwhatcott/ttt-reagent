@@ -12,13 +12,19 @@
      :boxes      (->> arena (drop 2) (take box-count) vec)
      :marks      (->> arena (drop 2) (drop box-count) vec)}))
 
-(defn click-box [index]
+(defn click-box! [index]
   (let [before     (components/arena)
         parsed     (parse-arena before 3)
         box        (get (:boxes parsed) index)
         attributes (second box)
-        on-click   (:on-click attributes)]
-    (on-click)))
+        on-click!  (:on-click attributes)]
+    (on-click!)))
+
+(defn assert-fill-color [expected-color indices all-boxes]
+  (let [boxes (map #(get all-boxes %) indices)]
+    (doseq [box boxes
+            :let [fill (:fill (second box))]]
+      (should= fill expected-color))))
 
 (describe "arena component"
   (context "rendering - 3x3"
@@ -45,12 +51,12 @@
               (should= :rect tag)
               (should= 0.9 (:width box-attributes))
               (should= 0.9 (:height box-attributes))
-              (should= "grey" (:fill box-attributes))
+              (should= "lightsteelblue" (:fill box-attributes))
               (should= [x y] (clicker))))))
       )
 
     (context "after first turn by X"
-      (before (click-box 0))
+      (before (click-box! 0))
 
       (it "renders the selected box without an on-click handler"
         (let [rendered    (components/arena)
@@ -61,7 +67,7 @@
           (should= :rect tag)
           (should= 0.9 (:width config))
           (should= 0.9 (:height config))
-          (should= "white" (:fill config))
+          (should= "lightsteelblue" (:fill config))
           (should= nil (:on-click config))))
 
       (it "switches the player/mark"
@@ -84,8 +90,8 @@
       )
 
     (context "After X and O both take a turn"
-      (before (click-box 0)
-              (click-box 1))
+      (before (click-box! 0)
+              (click-box! 1))
 
       (it "the player/mark gets switched back to 'X'"
         (should= :X (:mark @components/game)))
@@ -104,6 +110,28 @@
           (should= (int (:x attributes)) (:x box-config))
           (should= (int (:y attributes)) (:y box-config))
           (should= "O" text)))
+      )
+
+    (context "When a game ends in a win"
+      (before (click-box! 0)                                ; X
+              (click-box! 1)                                ; O
+              (click-box! 2)                                ; X
+              (click-box! 3)                                ; O
+              (click-box! 4)                                ; X
+              (click-box! 5)                                ; O
+              (click-box! 6))                               ; X (WINNING PLAY)
+
+      (it "indicates winning/losing moves via background colors"
+        (let [x-marks     [0 2 4 6]
+              o-marks     [1 3 5]
+              empty-marks [7 8]
+
+              rendered    (components/arena)
+              parsed      (parse-arena rendered 3)
+              boxes       (:boxes parsed)]
+          (assert-fill-color "darkseagreen" x-marks boxes)
+          (assert-fill-color "lightsalmon" o-marks boxes)
+          (assert-fill-color "lightsteelblue" empty-marks boxes)))
       )
     )
   )
