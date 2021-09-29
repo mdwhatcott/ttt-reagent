@@ -79,8 +79,8 @@
 
 (defn make-svg [_grid]
   [:svg {:view-box "0 0 3 3"
-         :width    500
-         :height   500}])
+         :width    "100%"
+         :height   "100%"}])
 
 (defn arena []
   (let [grid (:grid @game)]

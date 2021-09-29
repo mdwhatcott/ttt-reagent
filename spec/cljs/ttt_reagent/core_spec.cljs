@@ -39,8 +39,8 @@
               root-attributes (:attributes parsed)]
           (should= :svg (:root parsed))
           (should= "0 0 3 3" (:view-box root-attributes))
-          (should= 500 (:width root-attributes))
-          (should= 500 (:height root-attributes))
+          (should= "100%" (:width root-attributes))
+          (should= "100%" (:height root-attributes))
 
           (doseq [box (:boxes parsed)]
             (let [tag            (first box)
