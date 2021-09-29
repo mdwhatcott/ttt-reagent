@@ -8,6 +8,7 @@
     {:grid (ttt.grid/new-grid 3)
      :mark :X}))
 
+; TODO: figure out why defining this from the test code causes compilation failure. "Caused by: clojure.lang.ExceptionInfo: No such namespace: ttt-grid, could not locate ttt_grid.cljs, ttt_grid.cljc, or JavaScript source providing "ttt-grid" (Please check that namespaces with dashes use underscores in the ClojureScript file name) in file spec/cljs/ttt_reagent/core_spec.cljs {:tag :cljs/analysis-error}"
 (defn place-on-grid! [mark on]
   (let [grid (:grid @game)]
     (swap! game assoc :grid (ttt.grid/place mark on grid))))
