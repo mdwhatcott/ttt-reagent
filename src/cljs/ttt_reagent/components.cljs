@@ -3,6 +3,11 @@
     [ttt.grid]
     [reagent.core :as reagent]))
 
+(def COLOR
+  {:winner "darkseagreen"
+   :loser "lightsalmon"
+   :empty "lightsteelblue"})
+
 (defn new-game [grid-width]
   {:grid (ttt.grid/new-grid grid-width)
    :mark :X})
@@ -41,9 +46,9 @@
         placed          (get (:filled-by-cell grid) index)
         is-winning-box? (and (some? winner) (= winner placed))
         is-losing-box?  (and (some? winner) (some? placed) (not= winner placed))]
-    (cond is-winning-box? "darkseagreen"
-          is-losing-box?, "lightsalmon"
-          :else,,,,,,,,,, "lightsteelblue")))
+    (cond is-winning-box? (:winner COLOR)
+          is-losing-box?, (:loser COLOR)
+          :else,,,,,,,,,, (:empty COLOR))))
 
 (defn make-grid-box [x y grid]
   (let [pending-click?  (yet-to-be-clicked? x y)]
