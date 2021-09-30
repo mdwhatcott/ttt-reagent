@@ -2,6 +2,7 @@
   (:require
     [goog.string :as string]
     [goog.string.format]
+    [clojure.string]
     [ttt.grid]
     [reagent.core :as reagent]))
 
@@ -105,6 +106,31 @@
         (make-marks grid)))))
 
 (defn start-over []
-  (let [on-click (fn start-over-button-click [e]
+  (let [on-click (fn start-over-button-click [_e]
                    (reset! game (new-game)))]
     [:button {:on-click on-click} "New Game"]))
+
+(defn radio-id-value [name value]
+  (-> (string/format "%s--%s" name value)
+      (clojure.string/replace " " "-")
+      (clojure.string/lower-case)))
+
+(defn radio [name value checked? on-click]
+  (let [id-value   (radio-id-value name value)
+        ; TODO: is :value necessary?
+        attributes {:type :radio, :id id-value, :name name, :value id-value, :on-click on-click}
+        ; TODO: get this working (but without the need for a double-click)
+        #_attributes #_(if checked? (assoc attributes :checked "true") attributes)]
+    [:div
+     [:input attributes]
+     [:label {:for id-value} value]]))
+
+(defn set-grid-width [n]
+  (fn [_e] (reset! grid-width n)))
+
+(defn grid-size-selection []
+  [:div
+   [:p "Grid Size Selection:"]
+   (radio "grid-size-selection" "3x3" true (set-grid-width 3))
+   (radio "grid-size-selection" "4x4" false (set-grid-width 4))])
+

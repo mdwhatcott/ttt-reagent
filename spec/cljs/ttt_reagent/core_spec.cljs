@@ -1,7 +1,11 @@
 (ns ttt-reagent.core-spec
-  (:require-macros [speclj.core :refer [describe context before it should=]])
-  (:require [speclj.core]
-            [ttt-reagent.components :as components]))
+  (:require-macros
+    [speclj.core :refer
+     [describe context before it should= should-not=]])
+  (:require
+    [speclj.core]
+    [ttt-reagent.components :as components]
+    [cljs.pprint :as pprint]))
 
 (defn parse-arena [arena grid-width]
   (let [box-count (* grid-width grid-width)]
@@ -140,5 +144,57 @@
               moves  (:moves grid)]
           (should= mark :X)
           (should= 0 (count moves)))))
+
     )
+  )
+
+(defn parse-grid-size [component]
+  (let [inputs           (drop 2 component)
+
+        div-radio-3x3    (first inputs)
+        radio-3x3        (second div-radio-3x3)
+        radio-config-3x3 (second radio-3x3)
+        label-3x3        (nth div-radio-3x3 2)
+        label-config-3x3 (second label-3x3)
+
+        div-radio-4x4    (second inputs)
+        radio-4x4        (second div-radio-4x4)
+        radio-config-4x4 (second radio-4x4)
+        label-4x4        (nth div-radio-4x4 2)
+        label-config-4x4 (second label-4x4)]
+
+    {:radio-3x3 radio-config-3x3
+     :radio-4x4 radio-config-4x4
+
+     :label-3x3 label-config-3x3
+     :label-4x4 label-config-4x4}))
+
+(describe "Grid Size Selection Component"
+  (before (reset! components/grid-width 3))
+
+  (it "defines radio buttons for each supported grid size"
+    (let [parsed (parse-grid-size (components/grid-size-selection))
+          {:keys [radio-3x3 radio-4x4 label-3x3 label-4x4]} parsed]
+
+      (should= :radio (:type radio-3x3))
+      (should= :radio (:type radio-4x4))
+
+      (should= "grid-size-selection" (:name radio-3x3))
+      (should= "grid-size-selection" (:name radio-4x4))
+
+      (should= (:id radio-3x3) (:for label-3x3))
+      (should= (:id radio-4x4) (:for label-4x4))
+      (should-not= (:id radio-3x3) (:id radio-4x4))))
+
+  (it "allows changing the grid size to 4x4 and back to 3x3"
+    (let [parsed     (parse-grid-size (components/grid-size-selection))
+          clicker4x4 (-> parsed :radio-4x4 :on-click)
+          clicker3x3 (-> parsed :radio-3x3 :on-click)]
+
+      (clicker4x4)
+      (should= 4 @components/grid-width)
+
+      (clicker3x3)
+      (should= 3 @components/grid-width)))
+
   )
