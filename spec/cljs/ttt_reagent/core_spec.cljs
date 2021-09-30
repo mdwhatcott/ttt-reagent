@@ -130,7 +130,8 @@
 
     (context "When starting over"
       (before (click-box! 0)
-              (click-box! 1))
+              (click-box! 1)
+              (click-box! 2))
 
       (it "resets the game"
         (let [button (components/start-over)
