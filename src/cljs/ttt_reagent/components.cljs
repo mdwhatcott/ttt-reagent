@@ -56,12 +56,12 @@
 
 (defn make-grid-box [x y grid]
   (let [pending-click? (yet-to-be-clicked? x y)]
-    [:rect {:width    0.9
-            :height   0.9
-            :x        x
+    [:rect {:x        x
             :y        y
             :rx       0.1
             :ry       0.1
+            :width    0.9
+            :height   0.9
             :class    (box-class x y grid)
             :on-click (when pending-click? (make-on-click-for-box x y))}]))
 
