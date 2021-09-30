@@ -8,7 +8,7 @@
                  [cljsjs/react "17.0.2-0"]
                  [cljsjs/react-dom "17.0.2-0"]
                  [reagent "1.1.0"]
-                 [ttt-grid "0.1.0-SNAPSHOT"]]
+                 [ttt-grid "0.1.1"]]
 
   :profiles {:dev {:dependencies [[org.clojure/clojurescript "1.10.764"]
                                   [speclj "3.3.1"]
