@@ -31,9 +31,7 @@
 (describe "arena component"
   (context "rendering - 3x3"
 
-    (before
-      (reset! components/grid-width 3)
-      (reset! components/game (components/new-game)))
+    (before (reset! components/game (components/new-game 3)))
 
     (context "empty grid"
 

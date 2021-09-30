@@ -6,13 +6,12 @@
     [ttt.grid]
     [reagent.core :as reagent]))
 
-(defonce grid-width (reagent/atom 3))
-
-(defn new-game []
-  {:grid (ttt.grid/new-grid @grid-width)
+(defn new-game [width]
+  {:grid (ttt.grid/new-grid width)
    :mark :X})
 
-(defonce game (reagent/atom (new-game)))
+(defonce grid-width (reagent/atom 3))
+(defonce game (reagent/atom (new-game @grid-width)))
 
 (defn current-grid-width []
   (-> @game :grid :width))
@@ -107,7 +106,7 @@
 
 (defn start-over []
   (let [on-click (fn start-over-button-click [_e]
-                   (reset! game (new-game)))]
+                   (reset! game (new-game @grid-width)))]
     [:button {:on-click on-click} "New Game"]))
 
 (defn radio-id-value [name value]
