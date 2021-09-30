@@ -5,11 +5,6 @@
     [ttt.grid]
     [reagent.core :as reagent]))
 
-(def COLOR
-  {:winner "darkseagreen"
-   :loser  "lightsalmon"
-   :empty  "lightsteelblue"})
-
 (defonce grid-width (reagent/atom 3))
 
 (defn new-game []
@@ -51,13 +46,13 @@
        (some? placed)
        (not= winner placed)))
 
-(defn box-fill-color [x y grid]
+(defn box-class [x y grid]
   (let [winner (:winner grid)
         index  (cartesian->index x y)
         mark   (get (:filled-by-cell grid) index)]
-    (cond (is-winning-box? winner mark) (:winner COLOR)
-          (is-losing-box? winner mark), (:loser COLOR)
-          :else,,,,,,,,,,,,,,,,,,,,,,,, (:empty COLOR))))
+    (cond (is-winning-box? winner mark) :winner
+          (is-losing-box? winner mark), :loser
+          :else,,,,,,,,,,,,,,,,,,,,,,,, :empty)))
 
 (defn make-grid-box [x y grid]
   (let [pending-click? (yet-to-be-clicked? x y)]
@@ -67,16 +62,16 @@
             :y        y
             :rx       0.1
             :ry       0.1
-            :fill     (box-fill-color x y grid)
+            :class    (box-class x y grid)
             :on-click (when pending-click? (make-on-click-for-box x y))}]))
 
 (defn make-mark [cell mark]
   (let [w @grid-width
         x (rem cell w)
         y (quot cell w)]
-    [:text {:x           (+ 0.15 x)
-            :y           (+ 0.75 y)
-            :font-size   "1px"} (name mark)]))
+    [:text {:x         (+ 0.15 x)
+            :y         (+ 0.75 y)
+            :font-size "1px"} (name mark)]))
 
 (defn make-boxes [grid]
   (let [width (:width grid)]

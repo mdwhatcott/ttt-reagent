@@ -18,11 +18,11 @@
         on-click!  (:on-click attributes)]
     (on-click!)))
 
-(defn assert-fill-color [expected-color indices all-boxes]
+(defn assert-class [expected-class indices all-boxes]
   (let [boxes (map #(get all-boxes %) indices)]
     (doseq [box boxes
-            :let [fill (:fill (second box))]]
-      (should= fill expected-color))))
+            :let [class (:class (second box))]]
+      (should= class expected-class))))
 
 (describe "arena component"
   (context "rendering - 3x3"
@@ -48,7 +48,7 @@
               (should= :rect tag)
               (should= 0.9 (:width box-attributes))
               (should= 0.9 (:height box-attributes))
-              (should= (:empty components/COLOR) (:fill box-attributes))))))
+              (should= :empty (:class box-attributes))))))
       )
 
     (context "after first turn by X"
@@ -63,7 +63,7 @@
           (should= :rect tag)
           (should= 0.9 (:width config))
           (should= 0.9 (:height config))
-          (should= (:empty components/COLOR) (:fill config))
+          (should= :empty (:class config))
           (should= nil (:on-click config))))
 
       (it "switches the player/mark"
@@ -121,9 +121,9 @@
         (let [rendered (components/arena)
               parsed   (parse-arena rendered 3)
               boxes    (:boxes parsed)]
-          (assert-fill-color (:winner components/COLOR) [0 2 4 6] boxes)
-          (assert-fill-color (:loser components/COLOR) [1 3 5] boxes)
-          (assert-fill-color (:empty components/COLOR) [7 8] boxes)))
+          (assert-class :winner [0 2 4 6] boxes)
+          (assert-class :loser [1 3 5] boxes)
+          (assert-class :empty [7 8] boxes)))
       )
 
     (context "When starting over"
