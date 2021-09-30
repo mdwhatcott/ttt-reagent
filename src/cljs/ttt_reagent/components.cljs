@@ -1,6 +1,6 @@
 (ns ttt-reagent.components
   (:require
-    [goog.string :as gstring]
+    [goog.string :as string]
     [goog.string.format]
     [ttt.grid]
     [reagent.core :as reagent]))
@@ -83,10 +83,11 @@
   (for [[cell mark] (:filled-by-cell grid)]
     (make-mark cell mark)))
 
+(defn view-dimensions []
+  (string/format "0 0 %d %d" @grid-width @grid-width))
+
 (defn make-svg [_grid]
-  [:svg {:view-box (gstring/format "0 0 %d %d" @grid-width @grid-width)
-         :width    "100%"
-         :height   "100%"}])
+  [:svg {:view-box (view-dimensions) :width "100%" :height "100%"}])
 
 (defn arena []
   (let [grid (:grid @game)]
