@@ -119,7 +119,8 @@
 
 (defn set-grid-width [n]
   (fn [_e]
-    (new-game! n)))
+    (when (not= n (:width @grid))
+      (new-game! n))))
 
 (defn grid-size-selection []
   [:div
