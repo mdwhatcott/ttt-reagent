@@ -1,5 +1,7 @@
 (ns ttt-reagent.components
   (:require
+    [goog.string :as gstring]
+    [goog.string.format]
     [ttt.grid]
     [reagent.core :as reagent]))
 
@@ -8,11 +10,13 @@
    :loser  "lightsalmon"
    :empty  "lightsteelblue"})
 
-(defn new-game [grid-width]
-  {:grid (ttt.grid/new-grid grid-width)
+(defonce grid-width (reagent/atom 3))
+
+(defn new-game []
+  {:grid (ttt.grid/new-grid @grid-width)
    :mark :X})
 
-(defonce game (reagent/atom (new-game 3)))
+(defonce game (reagent/atom (new-game)))
 
 (defn other-mark [mark]
   (if (= mark :X) :O :X))
@@ -20,8 +24,8 @@
 (defn switch-mark! []
   (swap! game update :mark other-mark))
 
-(defn cartesian->index [width x y]
-  (+ x (* width y)))
+(defn cartesian->index [x y]
+  (+ x (* @grid-width y)))
 
 (defn place-on-grid! [mark on]
   (swap! game update :grid #(ttt.grid/place mark on %)))
@@ -29,15 +33,14 @@
 (defn make-on-click-for-box [x y]
   (fn rect-click [_e]
     (let [mark  (:mark @game)
-          index (cartesian->index 3 x y)]
+          index (cartesian->index x y)]
       (place-on-grid! mark index)
       (switch-mark!) nil)))
 
 (defn yet-to-be-clicked? [x y]
   (let [grid        (:grid @game)
-        width       (:width grid)
         empty-cells (:empty-cells grid)]
-    (contains? empty-cells (cartesian->index width x y))))
+    (contains? empty-cells (cartesian->index x y))))
 
 (defn is-winning-box? [winner placed]
   (and (some? winner)
@@ -50,7 +53,7 @@
 
 (defn box-fill-color [x y grid]
   (let [winner (:winner grid)
-        index  (cartesian->index 3 x y)
+        index  (cartesian->index x y)
         mark   (get (:filled-by-cell grid) index)]
     (cond (is-winning-box? winner mark) (:winner COLOR)
           (is-losing-box? winner mark), (:loser COLOR)
@@ -62,12 +65,15 @@
             :height   0.9
             :x        x
             :y        y
+            :rx       0.1
+            :ry       0.1
             :fill     (box-fill-color x y grid)
             :on-click (when pending-click? (make-on-click-for-box x y))}]))
 
 (defn make-mark [cell mark]
-  (let [x (rem cell 3)
-        y (quot cell 3)]
+  (let [w @grid-width
+        x (rem cell w)
+        y (quot cell w)]
     [:text {:x           (+ 0.15 x)
             :y           (+ 0.75 y)
             :font-size   "1px"
@@ -84,7 +90,7 @@
     (make-mark cell mark)))
 
 (defn make-svg [_grid]
-  [:svg {:view-box "0 0 3 3"
+  [:svg {:view-box (gstring/format "0 0 %d %d" @grid-width @grid-width)
          :width    "100%"
          :height   "100%"}])
 
@@ -98,5 +104,5 @@
 
 (defn start-over []
   (let [on-click (fn start-over-button-click [e]
-                   (reset! game (new-game 3)))]
+                   (reset! game (new-game)))]
     [:button {:on-click on-click} "New Game"]))
