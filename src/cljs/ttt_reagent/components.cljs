@@ -6,12 +6,11 @@
     [ttt.grid]
     [reagent.core :as reagent]))
 
-(defonce grid-width (reagent/atom 3))
-(defonce grid (reagent/atom (ttt.grid/new-grid @grid-width)))
+(defonce grid (reagent/atom (ttt.grid/new-grid 3)))
 (defonce mark (reagent/atom :X))
 
-(defn new-game []
-  (reset! grid (ttt.grid/new-grid @grid-width))
+(defn new-game! [width]
+  (reset! grid (ttt.grid/new-grid width))
   (reset! mark :X))
 
 (defn other-mark [mark]
@@ -100,8 +99,7 @@
       (make-marks @grid))))
 
 (defn start-over []
-  (let [on-click (fn start-over-button-click [_e]
-                   (new-game))]
+  (let [on-click (fn start-over-button-click [_e] (new-game! (:width @grid)))]
     [:button {:on-click on-click} "New Game"]))
 
 (defn radio-id-value [name value]
@@ -120,11 +118,12 @@
      [:label {:for id-value} value]]))
 
 (defn set-grid-width [n]
-  (fn [_e] (reset! grid-width n)))
+  (fn [_e]
+    (new-game! n)))
 
 (defn grid-size-selection []
   [:div
-   [:p "Grid Size Selection:"]
+   [:p "Grid Size Selection:)"]
    (radio "grid-size-selection" "3x3" true (set-grid-width 3))
    (radio "grid-size-selection" "4x4" false (set-grid-width 4))])
 

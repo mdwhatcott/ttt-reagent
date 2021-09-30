@@ -31,7 +31,7 @@
 (describe "arena component"
   (context "rendering - 3x3"
 
-    (before (components/new-game))
+    (before (components/new-game! 3))
 
     (context "empty grid"
 
@@ -167,7 +167,7 @@
      :label-4x4 label-config-4x4}))
 
 (describe "Grid Size Selection Component"
-  (before (reset! components/grid-width 3))
+  (before (components/new-game! 3))
 
   (it "defines radio buttons for each supported grid size"
     (let [parsed (parse-grid-size (components/grid-size-selection))
@@ -189,9 +189,9 @@
           clicker3x3 (-> parsed :radio-3x3 :on-click)]
 
       (clicker4x4)
-      (should= 4 @components/grid-width)
+      (should= 4 (:width @components/grid))
 
       (clicker3x3)
-      (should= 3 @components/grid-width)))
+      (should= 3 (:width @components/grid))))
 
   )
