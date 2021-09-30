@@ -31,7 +31,7 @@
 (describe "arena component"
   (context "rendering - 3x3"
 
-    (before (reset! components/game (components/new-game 3)))
+    (before (components/new-game))
 
     (context "empty grid"
 
@@ -69,7 +69,7 @@
           (should= nil (:on-click config))))
 
       (it "switches the player/mark"
-        (should= :O (:mark @components/game)))
+        (should= :O @components/mark))
 
       (it "renders an 'X' in the clicked box"
         (let [rendered    (components/arena)
@@ -92,7 +92,7 @@
               (click-box! 1))
 
       (it "the player/mark gets switched back to 'X'"
-        (should= :X (:mark @components/game)))
+        (should= :X @components/mark))
 
       (it "renders an 'O' in the box that was clicked second"
         (let [rendered    (components/arena)
@@ -136,9 +136,8 @@
         (let [button (components/start-over)
               click  (:on-click (second button))
               _      (click)
-              game   @components/game
-              mark   (:mark game)
-              grid   (:grid game)
+              mark   @components/mark
+              grid   @components/grid
               moves  (:moves grid)]
           (should= mark :X)
           (should= 0 (count moves)))))

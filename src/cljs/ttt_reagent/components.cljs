@@ -6,38 +6,34 @@
     [ttt.grid]
     [reagent.core :as reagent]))
 
-(defn new-game [width]
-  {:grid (ttt.grid/new-grid width)
-   :mark :X})
-
 (defonce grid-width (reagent/atom 3))
-(defonce game (reagent/atom (new-game @grid-width)))
+(defonce grid (reagent/atom (ttt.grid/new-grid @grid-width)))
+(defonce mark (reagent/atom :X))
 
-(defn current-grid-width []
-  (-> @game :grid :width))
+(defn new-game []
+  (reset! grid (ttt.grid/new-grid @grid-width))
+  (reset! mark :X))
 
 (defn other-mark [mark]
   (if (= mark :X) :O :X))
 
 (defn switch-mark! []
-  (swap! game update :mark other-mark))
+  (swap! mark other-mark))
 
 (defn cartesian->index [x y]
-  (+ x (* (current-grid-width) y)))
+  (+ x (* (:width @grid) y)))
 
-(defn place-on-grid! [mark on]
-  (swap! game update :grid #(ttt.grid/place mark on %)))
+(defn place-on-grid! [on]
+  (swap! grid #(ttt.grid/place @mark on %)))
 
 (defn make-on-click-for-box [x y]
   (fn rect-click [_e]
-    (let [mark  (:mark @game)
-          index (cartesian->index x y)]
-      (place-on-grid! mark index)
+    (let [index (cartesian->index x y)]
+      (place-on-grid! index)
       (switch-mark!) nil)))
 
 (defn yet-to-be-clicked? [x y]
-  (let [grid        (:grid @game)
-        empty-cells (:empty-cells grid)]
+  (let [empty-cells (:empty-cells @grid)]
     (contains? empty-cells (cartesian->index x y))))
 
 (defn is-winning-box? [winner placed]
@@ -71,7 +67,7 @@
 
 ; TODO: draw lines for 'x' and circle for 'o'
 (defn make-mark [cell mark]
-  (let [w (current-grid-width)
+  (let [w (:width @grid)
         x (rem cell w)
         y (quot cell w)]
     [:text {:x         (+ 0.15 x)
@@ -88,25 +84,24 @@
   (for [[cell mark] (:filled-by-cell grid)]
     (make-mark cell mark)))
 
-(defn view-dimensions []
-  (let [width (current-grid-width)]
-    (string/format "0 0 %d %d" width width)))
-
 ; TODO: move static values to <html><style>?
-(defn make-svg [_grid]
-  [:svg {:view-box (view-dimensions) :width "100%" :height "100%"}])
+(defn make-svg [grid]
+  (let [width    (:width grid)
+        view-box (string/format "0 0 %d %d" width width)]
+    [:svg {:view-box view-box
+           :width    "100%"
+           :height   "100%"}]))
 
 (defn arena []
-  (let [grid (:grid @game)]
-    (into
-      (make-svg grid)
-      (concat
-        (make-boxes grid)
-        (make-marks grid)))))
+  (into
+    (make-svg @grid)
+    (concat
+      (make-boxes @grid)
+      (make-marks @grid))))
 
 (defn start-over []
   (let [on-click (fn start-over-button-click [_e]
-                   (reset! game (new-game @grid-width)))]
+                   (new-game))]
     [:button {:on-click on-click} "New Game"]))
 
 (defn radio-id-value [name value]
