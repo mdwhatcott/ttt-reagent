@@ -62,10 +62,10 @@
 (defn make-mark [cell mark]
   (let [x (rem cell 3)
         y (quot cell 3)]
-    [:text {:x           (+ 0.1 x)
-            :y           (+ 0.8 y)
+    [:text {:x           (+ 0.15 x)
+            :y           (+ 0.75 y)
             :font-size   "1px"
-            :font-family "monospaced"} (name mark)]))
+            :font-family "Courier Prime Code, monospaced"} (name mark)]))
 
 (defn make-boxes [grid]
   (let [width (:width grid)]
