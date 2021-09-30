@@ -31,8 +31,7 @@
     (let [mark  (:mark @game)
           index (cartesian->index 3 x y)]
       (place-on-grid! mark index)
-      (switch-mark!)
-      [x y])))
+      (switch-mark!) nil)))
 
 (defn yet-to-be-clicked? [x y]
   (let [grid        (:grid @game)

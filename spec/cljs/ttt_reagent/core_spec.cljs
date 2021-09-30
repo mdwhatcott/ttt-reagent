@@ -42,15 +42,11 @@
 
           (doseq [box (:boxes parsed)]
             (let [tag            (first box)
-                  box-attributes (second box)
-                  x              (:x box-attributes)
-                  y              (:y box-attributes)
-                  clicker        (:on-click box-attributes)]
+                  box-attributes (second box)]
               (should= :rect tag)
               (should= 0.9 (:width box-attributes))
               (should= 0.9 (:height box-attributes))
-              (should= (:empty components/COLOR) (:fill box-attributes))
-              (should= [x y] (clicker))))))
+              (should= (:empty components/COLOR) (:fill box-attributes))))))
       )
 
     (context "after first turn by X"
