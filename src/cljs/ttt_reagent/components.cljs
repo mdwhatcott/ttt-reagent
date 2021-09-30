@@ -76,8 +76,7 @@
         y (quot cell w)]
     [:text {:x           (+ 0.15 x)
             :y           (+ 0.75 y)
-            :font-size   "1px"
-            :font-family "Courier Prime Code, monospaced"} (name mark)]))
+            :font-size   "1px"} (name mark)]))
 
 (defn make-boxes [grid]
   (let [width (:width grid)]
