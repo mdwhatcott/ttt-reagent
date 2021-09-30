@@ -184,15 +184,6 @@
       (should= (:id radio-4x4) (:for label-4x4))
       (should-not= (:id radio-3x3) (:id radio-4x4))))
 
-  (it "does nothing if the size is unchanged"
-    (let [parsed       (parse-grid-size (components/grid-size-selection))
-          on-click-3x3 (-> parsed :radio-3x3 :on-click)]
-      (click-box! 0)
-
-      (on-click-3x3)
-
-      (should= 1 (count (:filled-by-cell @components/grid)))))
-
   (it "allows changing the grid size to 4x4 and back to 3x3"
     (let [parsed         (parse-grid-size (components/grid-size-selection))
           on-click-4x4   (-> parsed :radio-4x4 :on-click)
@@ -203,5 +194,14 @@
 
       (on-clicker-3x3)
       (should= 3 (:width @components/grid))))
+
+  (it "does nothing if the size clicked matches the current size"
+    (let [parsed       (parse-grid-size (components/grid-size-selection))
+          on-click-3x3 (-> parsed :radio-3x3 :on-click)]
+      (click-box! 0)
+
+      (on-click-3x3)
+
+      (should= 1 (count (:filled-by-cell @components/grid)))))
 
   )
