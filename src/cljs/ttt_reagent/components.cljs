@@ -124,7 +124,7 @@
 
 (defn grid-size-selection []
   [:div
-   [:p "Grid Size Selection:)"]
+   [:p "Grid Size:)"]
    (radio "grid-size-selection" "3x3" true (set-grid-width 3))
    (radio "grid-size-selection" "4x4" false (set-grid-width 4))])
 
