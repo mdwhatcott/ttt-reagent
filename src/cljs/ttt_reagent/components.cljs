@@ -20,7 +20,7 @@
   (swap! game update :mark other-mark))
 
 (defn cartesian->index [x y]
-  (+ x (* @grid-width y)))
+  (+ x (* (-> @game :grid :width) y)))
 
 (defn place-on-grid! [mark on]
   (swap! game update :grid #(ttt.grid/place mark on %)))
@@ -68,7 +68,7 @@
 
 ; TODO: draw lines for 'x' and circle for 'o'
 (defn make-mark [cell mark]
-  (let [w @grid-width
+  (let [w (-> @game :grid :width)
         x (rem cell w)
         y (quot cell w)]
     [:text {:x         (+ 0.15 x)
@@ -86,7 +86,8 @@
     (make-mark cell mark)))
 
 (defn view-dimensions []
-  (string/format "0 0 %d %d" @grid-width @grid-width))
+  (let [width (-> @game :grid :width)]
+    (string/format "0 0 %d %d" width width)))
 
 ; TODO: move static values to <html><style>?
 (defn make-svg [_grid]
