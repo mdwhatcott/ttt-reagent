@@ -54,6 +54,7 @@
           (is-losing-box? winner mark), :loser
           :else,,,,,,,,,,,,,,,,,,,,,,,, :empty)))
 
+; TODO: move static values to <html><style>?
 (defn make-grid-box [x y grid]
   (let [pending-click? (yet-to-be-clicked? x y)]
     [:rect {:x        x
@@ -65,6 +66,7 @@
             :class    (box-class x y grid)
             :on-click (when pending-click? (make-on-click-for-box x y))}]))
 
+; TODO: draw lines for 'x' and circle for 'o'
 (defn make-mark [cell mark]
   (let [w @grid-width
         x (rem cell w)
@@ -86,6 +88,7 @@
 (defn view-dimensions []
   (string/format "0 0 %d %d" @grid-width @grid-width))
 
+; TODO: move static values to <html><style>?
 (defn make-svg [_grid]
   [:svg {:view-box (view-dimensions) :width "100%" :height "100%"}])
 
