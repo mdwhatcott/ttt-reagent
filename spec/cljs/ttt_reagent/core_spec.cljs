@@ -28,7 +28,7 @@
             :let [class (:class (second box))]]
       (should= class expected-class))))
 
-(describe "arena component"
+(describe "Arena Component"
   (context "rendering - 3x3"
 
     (before (components/new-game! 3))
