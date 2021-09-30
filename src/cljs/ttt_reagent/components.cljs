@@ -13,6 +13,9 @@
 
 (defonce game (reagent/atom (new-game)))
 
+(defn current-grid-width []
+  (-> @game :grid :width))
+
 (defn other-mark [mark]
   (if (= mark :X) :O :X))
 
@@ -20,7 +23,7 @@
   (swap! game update :mark other-mark))
 
 (defn cartesian->index [x y]
-  (+ x (* (-> @game :grid :width) y)))
+  (+ x (* (current-grid-width) y)))
 
 (defn place-on-grid! [mark on]
   (swap! game update :grid #(ttt.grid/place mark on %)))
@@ -68,7 +71,7 @@
 
 ; TODO: draw lines for 'x' and circle for 'o'
 (defn make-mark [cell mark]
-  (let [w (-> @game :grid :width)
+  (let [w (current-grid-width)
         x (rem cell w)
         y (quot cell w)]
     [:text {:x         (+ 0.15 x)
@@ -86,7 +89,7 @@
     (make-mark cell mark)))
 
 (defn view-dimensions []
-  (let [width (-> @game :grid :width)]
+  (let [width (current-grid-width)]
     (string/format "0 0 %d %d" width width)))
 
 ; TODO: move static values to <html><style>?
