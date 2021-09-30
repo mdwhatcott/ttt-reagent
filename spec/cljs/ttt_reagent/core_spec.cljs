@@ -134,8 +134,9 @@
         (let [button (components/start-over)
               click  (:on-click (second button))
               _      (click)
-              mark   (:mark @components/game)
-              grid   (:grid @components/game)
+              game   @components/game
+              mark   (:mark game)
+              grid   (:grid game)
               moves  (:moves grid)]
           (should= mark :X)
           (should= 0 (count moves)))))
