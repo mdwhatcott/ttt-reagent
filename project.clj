@@ -21,4 +21,8 @@
 
   :clean-targets ^{:protect false} [:target-path "resources/public/cljs"]
 
-  :aliases {"cljs" ["run" "-m" "ttt-reagent.cljs"]})
+  :aliases {"cljs"  ["run" "-m" "ttt-reagent.cljs"]
+            "test1" ["run" "-m" "ttt-reagent.cljs" "once" "development"]
+            "tests" ["run" "-m" "ttt-reagent.cljs" "auto" "development"]
+            "prod1" ["run" "-m" "ttt-reagent.cljs" "once" "production"]
+            "prods" ["run" "-m" "ttt-reagent.cljs" "auto" "production"]})

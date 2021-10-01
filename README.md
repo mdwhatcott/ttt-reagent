@@ -9,18 +9,18 @@
 
 ## Commands:
 
-1. `lein cljs once development` - Runs tests
-1. `lein cljs auto development` - Runs tests continuously on detection of changes
-1. `lein cljs once production` - Compiles ClojureScript to javascript
-1. `lein cljs auto production` - Compiles ClojureScript to javascript continuously on detection of changes
+1. `lein test1` - Runs tests
+1. `lein tests` - Runs tests continuously on detection of changes
+1. `lein prod1` - Compiles ClojureScript to javascript
+1. `lein prods` - Compiles ClojureScript to javascript continuously on detection of changes
 1. `lein clean` - Deletes all compiled artifacts.
 
 ## Play Local Instance:
 
-Run `lein cljs once production` and navigate in a web browser to the file at `/resources/public/index.html`.
+Run `lein prod1` and navigate in a web browser to the file at `/resources/public/index.html`.
 
 ```
-$ open $(pwd)/resources/public/index.html
+$ lein prod1 && open $(pwd)/resources/public/index.html
 ```
 
 ## Play Online Instance:

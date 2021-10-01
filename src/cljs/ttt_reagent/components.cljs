@@ -58,9 +58,12 @@
 (defn- make-grid-box [x y grid]
   (let [width          0.9
         offset         0.05
+        corner-radius  0.1
         pending-click? (yet-to-be-clicked? x y)]
     [:rect {:x        (+ x offset)
             :y        (+ y offset)
+            :rx       corner-radius
+            :ry       corner-radius
             :width    width
             :height   width
             :class    (box-class x y grid)
@@ -94,7 +97,7 @@
     [:path {:class :mark-x, :d path}]))
 
 (defn- make-o-mark [x y]
-  [:circle {:class :mark-o, :cx x, :cy y}])
+  [:circle {:class :mark-o, :cx x, :cy y :r 0.3}])
 
 (defn- make-mark [cell mark]
   (let [width    (:width @grid)
