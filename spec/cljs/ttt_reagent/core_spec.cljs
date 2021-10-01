@@ -105,10 +105,10 @@
           (should= (int (:cy attributes)) (int (:y box-config)))))
 
       (it "composes the path of the rendered 'X' mark"
-        (should= ["M 1 2 " "L 0.75 1.75 "                   ; center -> upper-left
-                  "M 1 2 " "L 1.25 1.75 "                   ; center -> upper-right
-                  "M 1 2 " "L 0.75 2.25 "                   ; center -> lower-left
-                  "M 1 2 " "L 1.25 2.25 "]                  ; center -> lower-right
+        (should= ["M 0.75 1.75 "                            ; upper-left
+                  "L 1.25 2.25 "                            ; lower-right
+                  "M 1.25 1.75 "                            ; upper-right
+                  "L 0.75 2.25 "]                           ; lower-left
                  (components/compose-x-path 1 2)))
       )
 

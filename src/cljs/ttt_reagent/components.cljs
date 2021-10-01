@@ -81,16 +81,11 @@
 (def VIEW-BOX (partial string/format "0 0 %d %d"))
 
 (defn compose-x-path [x y]
-  (let [len            0.25
-        to-center      (PATH-MOVE x y)
-        to-upper-left  (PATH-LINE (- x len) (- y len))
-        to-upper-right (PATH-LINE (+ x len) (- y len))
-        to-lower-left  (PATH-LINE (- x len) (+ y len))
-        to-lower-right (PATH-LINE (+ x len) (+ y len))]
-    [to-center to-upper-left
-     to-center to-upper-right
-     to-center to-lower-left
-     to-center to-lower-right]))
+  (let [len 0.25]
+    [(PATH-MOVE (- x len) (- y len))                        ; move upper-left
+     (PATH-LINE (+ x len) (+ y len))                        ; line lower-right
+     (PATH-MOVE (+ x len) (- y len))                        ; move upper-right
+     (PATH-LINE (- x len) (+ y len))]))                     ; line lower-left
 
 (defn- make-x-mark [x y]
   (let [path (apply str (compose-x-path x y))]
