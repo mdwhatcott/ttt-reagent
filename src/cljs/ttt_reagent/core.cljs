@@ -1,7 +1,5 @@
 (ns ttt-reagent.core
-  (:require [goog.dom :as gdom]
-            [reagent.core :as reagent]
-            [reagent.dom :as rdom]
+  (:require [reagent.dom :as rdom]
             [ttt-reagent.components :as components]))
 
 (defn screen []
