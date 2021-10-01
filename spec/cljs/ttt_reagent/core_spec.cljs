@@ -42,8 +42,6 @@
               root-attributes (:attributes parsed)]
           (should= :svg (:root parsed))
           (should= "0 0 3 3" (:view-box root-attributes))
-          (should= "100%" (:width root-attributes))
-          (should= "100%" (:height root-attributes))
 
           (doseq [box (:boxes parsed)]
             (let [tag            (first box)
@@ -82,8 +80,8 @@
               tag         (first mark)
               attributes  (second mark)]
           (should= :path tag)
-          (should= (int (:x attributes)) (:x box-config))
-          (should= (int (:y attributes)) (:y box-config))))
+          (should= (int (:x attributes)) (int (:x box-config)))
+          (should= (int (:y attributes)) (int (:y box-config)))))
       )
 
     (context "After X and O both take a turn"
@@ -103,8 +101,8 @@
               tag         (first mark)
               attributes  (second mark)]
           (should= :circle tag)
-          (should= (int (:cx attributes)) (:x box-config))
-          (should= (int (:cy attributes)) (:y box-config))))
+          (should= (int (:cx attributes)) (int (:x box-config)))
+          (should= (int (:cy attributes)) (int (:y box-config)))))
 
       (it "composes the path of the rendered 'X' mark"
         (should= ["M 1 2 " "L 0.75 1.75 "                   ; center -> upper-left

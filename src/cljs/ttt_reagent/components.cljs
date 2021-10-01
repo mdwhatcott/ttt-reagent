@@ -52,15 +52,13 @@
         index  (cartesian->index x y)
         mark   (get (:filled-by-cell grid) index)]
     (cond (is-winning-box? winner mark) :winner
-          (is-losing-box? winner mark), :loser
-          :else,,,,,,,,,,,,,,,,,,,,,,,, :empty)))
+          (is-losing-box? winner mark) :loser
+          :else :empty)))
 
 (defn make-grid-box [x y grid]
   (let [pending-click? (yet-to-be-clicked? x y)]
-    [:rect {:x        x
-            :y        y
-            :rx       0.1
-            :ry       0.1
+    [:rect {:x        (+ 0.05 x)
+            :y        (+ 0.05 y)
             :width    0.9
             :height   0.9
             :class    (box-class x y grid)
@@ -68,44 +66,34 @@
                         (make-on-click-for-box x y))}]))
 
 (defn make-o-mark [x y]
-  [:circle
-   {:cx           x
-    :cy           y
-    :r            0.3
-    :stroke-width 0.1
-    :stroke       "black"
-    :fill-opacity 0}])
+  [:circle {:class :mark-o, :cx x, :cy y}])
 
-(def MOVE (partial string/format "M %f %f "))
-(def LINE (partial string/format "L %f %f "))
+(def PATH-MOVE (partial string/format "M %f %f "))
+(def PATH-LINE (partial string/format "L %f %f "))
+(def VIEW-BOX (partial string/format "0 0 %d %d"))
 
 (defn compose-x-path [x y]
   (let [len            0.25
-        to-center      (MOVE x y)
-        to-upper-left  (LINE (- x len) (- y len))
-        to-upper-right (LINE (+ x len) (- y len))
-        to-lower-left  (LINE (- x len) (+ y len))
-        to-lower-right (LINE (+ x len) (+ y len))]
+        to-center      (PATH-MOVE x y)
+        to-upper-left  (PATH-LINE (- x len) (- y len))
+        to-upper-right (PATH-LINE (+ x len) (- y len))
+        to-lower-left  (PATH-LINE (- x len) (+ y len))
+        to-lower-right (PATH-LINE (+ x len) (+ y len))]
     [to-center to-upper-left
      to-center to-upper-right
      to-center to-lower-left
      to-center to-lower-right]))
 
 (defn make-x-mark [x y]
-  [:path
-   {:d               (apply str (compose-x-path x y))
-    :stroke-width    0.1
-    :stroke-linecap  "round"
-    :stroke-linejoin "round"
-    :stroke          "black"
-    :fill            "transparent"}])
+  (let [path (apply str (compose-x-path x y))]
+    [:path {:class :mark-x, :d path}]))
 
 (defn make-mark [cell mark]
   (let [w        (:width @grid)
         x        (rem cell w)
         y        (quot cell w)
-        center-x (+ 0.45 x)
-        center-y (+ 0.45 y)]
+        center-x (+ 0.5 x)
+        center-y (+ 0.5 y)]
     (if (= mark :O)
       (make-o-mark center-x center-y)
       (make-x-mark center-x center-y))))
@@ -120,13 +108,9 @@
   (for [[cell mark] (:filled-by-cell grid)]
     (make-mark cell mark)))
 
-; TODO: move static values to <html><style>?
 (defn make-svg [grid]
-  (let [width    (:width grid)
-        view-box (string/format "0 0 %d %d" width width)]
-    [:svg {:view-box view-box
-           :width    "100%"
-           :height   "100%"}]))
+  (let [width (:width grid)]
+    [:svg {:view-box (VIEW-BOX width width)}]))
 
 (defn arena []
   (into

@@ -6,15 +6,36 @@
   <style>
     body { font-family: Courier Prime Code, monospace; }
 
-    #container { width: 50%; margin: 0 auto; }
+    #container { width: 35%; margin: 0 auto; }
 
     h1 { text-align: center; }
+
+    button { margin: 20px 0; }
 
     .winner { fill: darkseagreen; }
     .loser  { fill: lightsalmon; }
     .empty  { fill: lightsteelblue; }
 
-    button { margin: 20px 0; }
+    .winner, .lower, .empty {
+        rx: 0.1;
+        ry: 0.1;
+    }
+
+    .mark-x {
+        stroke-width:    0.1;
+        stroke-linecap:  round;
+        stroke-linejoin: round;
+        stroke:          black;
+        fill:            transparent;
+    }
+
+    .mark-o {
+        r:            0.3;
+        stroke-width: 0.1;
+        stroke:       black;
+        fill-opacity: 0;
+    }
+
   </style>
 </head>
 <body>
