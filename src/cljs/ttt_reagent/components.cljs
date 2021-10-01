@@ -56,11 +56,13 @@
           :else :empty)))
 
 (defn- make-grid-box [x y grid]
-  (let [pending-click? (yet-to-be-clicked? x y)]
-    [:rect {:x        (+ 0.05 x)
-            :y        (+ 0.05 y)
-            :width    0.9
-            :height   0.9
+  (let [width          0.9
+        offset         0.05
+        pending-click? (yet-to-be-clicked? x y)]
+    [:rect {:x        (+ x offset)
+            :y        (+ y offset)
+            :width    width
+            :height   width
             :class    (box-class x y grid)
             :on-click (when pending-click?
                         (make-on-click-for-box x y))}]))
@@ -95,11 +97,12 @@
   [:circle {:class :mark-o, :cx x, :cy y}])
 
 (defn- make-mark [cell mark]
-  (let [w        (:width @grid)
-        x        (rem cell w)
-        y        (quot cell w)
-        center-x (+ 0.5 x)
-        center-y (+ 0.5 y)]
+  (let [width    (:width @grid)
+        x        (rem cell width)
+        y        (quot cell width)
+        offset   0.5
+        center-x (+ x offset)
+        center-y (+ y offset)]
     (if (= mark :O)
       (make-o-mark center-x center-y)
       (make-x-mark center-x center-y))))
