@@ -15,39 +15,39 @@
   (reset! grid (ttt.grid/new-grid width))
   (reset! mark :X))
 
-(defn other-mark [mark]
+(defn- other-mark [mark]
   (if (= mark :X) :O :X))
 
-(defn cartesian->index [x y]
+(defn- cartesian->index [x y]
   (+ x (* (:width @grid) y)))
 
-(defn make-move [x y]
+(defn- make-move [x y]
   (let [player (@mark @players)]
     (if (= player :human)
       (cartesian->index x y)
       (let [ai (player ttt.ai/players)]
         (ai @mark @grid)))))
 
-(defn make-on-click-for-box [x y]
+(defn- make-on-click-for-box [x y]
   (fn rect-click [_e]
     (let [on (make-move x y)]
       (reset! grid (ttt.grid/place @mark on @grid))
       (swap! mark other-mark) nil)))
 
-(defn yet-to-be-clicked? [x y]
+(defn- yet-to-be-clicked? [x y]
   (let [empty-cells (:empty-cells @grid)]
     (contains? empty-cells (cartesian->index x y))))
 
-(defn is-winning-box? [winner placed]
+(defn- is-winning-box? [winner placed]
   (and (some? winner)
        (= winner placed)))
 
-(defn is-losing-box? [winner placed]
+(defn- is-losing-box? [winner placed]
   (and (some? winner)
        (some? placed)
        (not= winner placed)))
 
-(defn box-class [x y grid]
+(defn- box-class [x y grid]
   (let [winner (:winner grid)
         index  (cartesian->index x y)
         mark   (get (:filled-by-cell grid) index)]
@@ -55,7 +55,7 @@
           (is-losing-box? winner mark) :loser
           :else :empty)))
 
-(defn make-grid-box [x y grid]
+(defn- make-grid-box [x y grid]
   (let [pending-click? (yet-to-be-clicked? x y)]
     [:rect {:x        (+ 0.05 x)
             :y        (+ 0.05 y)
@@ -65,7 +65,7 @@
             :on-click (when pending-click?
                         (make-on-click-for-box x y))}]))
 
-(defn make-boxes [grid]
+(defn- make-boxes [grid]
   (let [width (:width grid)]
     (for [y (range width)
           x (range width)]
@@ -87,14 +87,14 @@
      to-center to-lower-left
      to-center to-lower-right]))
 
-(defn make-x-mark [x y]
+(defn- make-x-mark [x y]
   (let [path (apply str (compose-x-path x y))]
     [:path {:class :mark-x, :d path}]))
 
-(defn make-o-mark [x y]
+(defn- make-o-mark [x y]
   [:circle {:class :mark-o, :cx x, :cy y}])
 
-(defn make-mark [cell mark]
+(defn- make-mark [cell mark]
   (let [w        (:width @grid)
         x        (rem cell w)
         y        (quot cell w)
@@ -104,11 +104,11 @@
       (make-o-mark center-x center-y)
       (make-x-mark center-x center-y))))
 
-(defn make-marks [grid]
+(defn- make-marks [grid]
   (for [[cell mark] (:filled-by-cell grid)]
     (make-mark cell mark)))
 
-(defn make-svg [grid]
+(defn- make-svg [grid]
   (let [width (:width grid)]
     [:svg {:view-box (VIEW-BOX width width)}]))
 
@@ -123,12 +123,12 @@
   (let [on-click (fn [_e] (new-game! (:width @grid)))]
     [:button {:on-click on-click} "New Game"]))
 
-(defn radio-id-value [name value]
+(defn- radio-id-value [name value]
   (-> (string/format "%s--%s" name value)
       (clojure.string/replace " " "-")
       (clojure.string/lower-case)))
 
-(defn radio [name value on-click]
+(defn- radio [name value on-click]
   (let [name       (clojure.string/lower-case name)
         id-value   (radio-id-value name value)
         attributes {:type     :radio
@@ -139,7 +139,7 @@
      [:input attributes]
      [:label {:for id-value} value]]))
 
-(defn set-grid-width [n]
+(defn- set-grid-width [n]
   (fn [_e]
     (when-not (= n (:width @grid))
       (new-game! n))))
@@ -150,7 +150,7 @@
    (radio "grid-size-selection" "3x3" (set-grid-width 3))
    (radio "grid-size-selection" "4x4" (set-grid-width 4))])
 
-(defn set-player [mark player]
+(defn- set-player [mark player]
   (fn [_e]
     (swap! players assoc mark player)))
 
