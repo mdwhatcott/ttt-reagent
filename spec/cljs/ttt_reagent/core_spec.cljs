@@ -261,12 +261,7 @@
       (should= "player-x-selection--human" (:id human))
       (should= "player-x-selection--easy-ai" (:id easy))
       (should= "player-x-selection--medium-ai" (:id medium))
-      (should= "player-x-selection--hard-ai" (:id hard))
-
-      (should= true (:checked human))
-      (should= false (:checked easy))
-      (should= false (:checked medium))
-      (should= false (:checked hard))))
+      (should= "player-x-selection--hard-ai" (:id hard))))
 
   (context "changing the 'X' player"
     (it "from human to easy ai and back"

@@ -110,14 +110,12 @@
       (clojure.string/replace " " "-")
       (clojure.string/lower-case)))
 
-(defn radio [name value checked? on-click]
+(defn radio [name value on-click]
   (let [name       (clojure.string/lower-case name)
         id-value   (radio-id-value name value)
         attributes {:type     :radio
                     :id       id-value
                     :name     name
-                    :value    id-value                      ; TODO: is this necessary?
-                    :checked  checked?
                     :on-click on-click}]
     [:div
      [:input attributes]
@@ -131,8 +129,8 @@
 (defn grid-size-selection []
   [:div
    [:p "Grid Size:"]
-   (radio "grid-size-selection" "3x3" true (set-grid-width 3))
-   (radio "grid-size-selection" "4x4" false (set-grid-width 4))])
+   (radio "grid-size-selection" "3x3" (set-grid-width 3))
+   (radio "grid-size-selection" "4x4" (set-grid-width 4))])
 
 (defn set-player [mark player]
   (fn [_e]
@@ -143,7 +141,7 @@
         name  (string/format "player-%s-selection" (name mark))]
     [:div
      [:p intro]
-     (radio name "Human" true (set-player mark :human))
-     (radio name "Easy AI" false (set-player mark :easy))
-     (radio name "Medium AI" false (set-player mark :medium))
-     (radio name "Hard AI" false (set-player mark :hard))]))
+     (radio name "Human" (set-player mark :human))
+     (radio name "Easy AI" (set-player mark :easy))
+     (radio name "Medium AI" (set-player mark :medium))
+     (radio name "Hard AI" (set-player mark :hard))]))
