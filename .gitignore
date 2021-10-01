@@ -11,5 +11,9 @@ pom.xml
 .lein-failures
 .lein-plugins
 .lein-repl-history
-/resources/public/cljs
 .specljs-timestamp
+
+!/resources/public/cljs
+/resources/public/cljs/*
+!/resources/public/cljs/app.js
+
