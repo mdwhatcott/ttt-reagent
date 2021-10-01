@@ -16,20 +16,14 @@
 (defn other-mark [mark]
   (if (= mark :X) :O :X))
 
-(defn switch-mark! []
-  (swap! mark other-mark))
-
 (defn cartesian->index [x y]
   (+ x (* (:width @grid) y)))
 
-(defn place-on-grid! [on]
-  (swap! grid #(ttt.grid/place @mark on %)))
-
 (defn make-on-click-for-box [x y]
   (fn rect-click [_e]
-    (let [index (cartesian->index x y)]
-      (place-on-grid! index)
-      (switch-mark!) nil)))
+    (let [on (cartesian->index x y)]
+      (reset! grid (ttt.grid/place @mark on @grid))
+      (swap! mark other-mark) nil)))
 
 (defn yet-to-be-clicked? [x y]
   (let [empty-cells (:empty-cells @grid)]
