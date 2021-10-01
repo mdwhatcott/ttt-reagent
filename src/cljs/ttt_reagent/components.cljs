@@ -3,12 +3,14 @@
     [goog.string :as string]
     [goog.string.format]
     [clojure.string]
+    [ttt.ai]
     [ttt.grid]
     [reagent.core :as reagent]))
 
 (defonce grid (reagent/atom (ttt.grid/new-grid 3)))
 (defonce mark (reagent/atom :X))
-
+(defonce players (reagent/atom {:X :human
+                                :O :human}))
 (defn new-game! [width]
   (reset! grid (ttt.grid/new-grid width))
   (reset! mark :X))
@@ -19,9 +21,16 @@
 (defn cartesian->index [x y]
   (+ x (* (:width @grid) y)))
 
+(defn make-move [x y]
+  (let [player (@mark @players)]
+    (if (= player :human)
+      (cartesian->index x y)
+      (let [ai (player ttt.ai/players)]
+        (ai @mark @grid)))))
+
 (defn make-on-click-for-box [x y]
   (fn rect-click [_e]
-    (let [on (cartesian->index x y)]
+    (let [on (make-move x y)]
       (reset! grid (ttt.grid/place @mark on @grid))
       (swap! mark other-mark) nil)))
 
@@ -46,7 +55,6 @@
           (is-losing-box? winner mark), :loser
           :else,,,,,,,,,,,,,,,,,,,,,,,, :empty)))
 
-; TODO: move static values to <html><style>?
 (defn make-grid-box [x y grid]
   (let [pending-click? (yet-to-be-clicked? x y)]
     [:rect {:x        x
@@ -56,7 +64,8 @@
             :width    0.9
             :height   0.9
             :class    (box-class x y grid)
-            :on-click (when pending-click? (make-on-click-for-box x y))}]))
+            :on-click (when pending-click?
+                        (make-on-click-for-box x y))}]))
 
 ; TODO: draw lines for 'x' and circle for 'o'
 (defn make-mark [cell mark]
@@ -93,7 +102,7 @@
       (make-marks @grid))))
 
 (defn start-over []
-  (let [on-click (fn start-over-button-click [_e] (new-game! (:width @grid)))]
+  (let [on-click (fn [_e] (new-game! (:width @grid)))]
     [:button {:on-click on-click} "New Game"]))
 
 (defn radio-id-value [name value]
@@ -102,23 +111,39 @@
       (clojure.string/lower-case)))
 
 (defn radio [name value checked? on-click]
-  (let [id-value   (radio-id-value name value)
-        ; TODO: is :value necessary?
-        attributes {:type :radio, :id id-value, :name name, :value id-value, :on-click on-click}
-        ; TODO: get this working (but without the need for a double-click)
-        #_attributes #_(if checked? (assoc attributes :checked "true") attributes)]
+  (let [name       (clojure.string/lower-case name)
+        id-value   (radio-id-value name value)
+        attributes {:type     :radio
+                    :id       id-value
+                    :name     name
+                    :value    id-value                      ; TODO: is this necessary?
+                    :checked  checked?
+                    :on-click on-click}]
     [:div
      [:input attributes]
      [:label {:for id-value} value]]))
 
 (defn set-grid-width [n]
   (fn [_e]
-    (when (not= n (:width @grid))
+    (when-not (= n (:width @grid))
       (new-game! n))))
 
 (defn grid-size-selection []
   [:div
-   [:p "Grid Size:)"]
+   [:p "Grid Size:"]
    (radio "grid-size-selection" "3x3" true (set-grid-width 3))
    (radio "grid-size-selection" "4x4" false (set-grid-width 4))])
 
+(defn set-player [mark player]
+  (fn [_e]
+    (swap! players assoc mark player)))
+
+(defn player-selection [mark]
+  (let [intro (string/format "Player '%s'" (name mark))
+        name  (string/format "player-%s-selection" (name mark))]
+    [:div
+     [:p intro]
+     (radio name "Human" true (set-player mark :human))
+     (radio name "Easy AI" false (set-player mark :easy))
+     (radio name "Medium AI" false (set-player mark :medium))
+     (radio name "Hard AI" false (set-player mark :hard))]))
