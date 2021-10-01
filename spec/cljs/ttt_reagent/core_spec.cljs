@@ -80,12 +80,10 @@
 
               mark        (first (:marks parsed))
               tag         (first mark)
-              attributes  (second mark)
-              text        (get mark 2)]
-          (should= :text tag)
+              attributes  (second mark)]
+          (should= :path tag)
           (should= (int (:x attributes)) (:x box-config))
-          (should= (int (:y attributes)) (:y box-config))
-          (should= "X" text)))
+          (should= (int (:y attributes)) (:y box-config))))
       )
 
     (context "After X and O both take a turn"
@@ -103,12 +101,17 @@
 
               mark        (second (:marks parsed))
               tag         (first mark)
-              attributes  (second mark)
-              text        (get mark 2)]
-          (should= :text tag)
-          (should= (int (:x attributes)) (:x box-config))
-          (should= (int (:y attributes)) (:y box-config))
-          (should= "O" text)))
+              attributes  (second mark)]
+          (should= :circle tag)
+          (should= (int (:cx attributes)) (:x box-config))
+          (should= (int (:cy attributes)) (:y box-config))))
+
+      (it "composes the path of the rendered 'X' mark"
+        (should= ["M 1 2 " "L 0.75 1.75 "                   ; center -> upper-left
+                  "M 1 2 " "L 1.25 1.75 "                   ; center -> upper-right
+                  "M 1 2 " "L 0.75 2.25 "                   ; center -> lower-left
+                  "M 1 2 " "L 1.25 2.25 "]                  ; center -> lower-right
+                 (components/compose-x-path 1 2)))
       )
 
     (context "When a game ends in a win"

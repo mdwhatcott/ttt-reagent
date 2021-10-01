@@ -67,14 +67,48 @@
             :on-click (when pending-click?
                         (make-on-click-for-box x y))}]))
 
-; TODO: draw lines for 'x' and circle for 'o'
+(defn make-o-mark [x y]
+  [:circle
+   {:cx           x
+    :cy           y
+    :r            0.3
+    :stroke-width 0.1
+    :stroke       "black"
+    :fill-opacity 0}])
+
+(def MOVE (partial string/format "M %f %f "))
+(def LINE (partial string/format "L %f %f "))
+
+(defn compose-x-path [x y]
+  (let [len            0.25
+        to-center      (MOVE x y)
+        to-upper-left  (LINE (- x len) (- y len))
+        to-upper-right (LINE (+ x len) (- y len))
+        to-lower-left  (LINE (- x len) (+ y len))
+        to-lower-right (LINE (+ x len) (+ y len))]
+    [to-center to-upper-left
+     to-center to-upper-right
+     to-center to-lower-left
+     to-center to-lower-right]))
+
+(defn make-x-mark [x y]
+  [:path
+   {:d               (apply str (compose-x-path x y))
+    :stroke-width    0.1
+    :stroke-linecap  "round"
+    :stroke-linejoin "round"
+    :stroke          "black"
+    :fill            "transparent"}])
+
 (defn make-mark [cell mark]
-  (let [w (:width @grid)
-        x (rem cell w)
-        y (quot cell w)]
-    [:text {:x         (+ 0.15 x)
-            :y         (+ 0.75 y)
-            :font-size "1px"} (name mark)]))
+  (let [w        (:width @grid)
+        x        (rem cell w)
+        y        (quot cell w)
+        center-x (+ 0.45 x)
+        center-y (+ 0.45 y)]
+    (if (= mark :O)
+      (make-o-mark center-x center-y)
+      (make-x-mark center-x center-y))))
 
 (defn make-boxes [grid]
   (let [width (:width grid)]
