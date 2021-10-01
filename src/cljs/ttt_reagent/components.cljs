@@ -65,8 +65,11 @@
             :on-click (when pending-click?
                         (make-on-click-for-box x y))}]))
 
-(defn make-o-mark [x y]
-  [:circle {:class :mark-o, :cx x, :cy y}])
+(defn make-boxes [grid]
+  (let [width (:width grid)]
+    (for [y (range width)
+          x (range width)]
+      (make-grid-box x y grid))))
 
 (def PATH-MOVE (partial string/format "M %f %f "))
 (def PATH-LINE (partial string/format "L %f %f "))
@@ -88,6 +91,9 @@
   (let [path (apply str (compose-x-path x y))]
     [:path {:class :mark-x, :d path}]))
 
+(defn make-o-mark [x y]
+  [:circle {:class :mark-o, :cx x, :cy y}])
+
 (defn make-mark [cell mark]
   (let [w        (:width @grid)
         x        (rem cell w)
@@ -97,12 +103,6 @@
     (if (= mark :O)
       (make-o-mark center-x center-y)
       (make-x-mark center-x center-y))))
-
-(defn make-boxes [grid]
-  (let [width (:width grid)]
-    (for [y (range width)
-          x (range width)]
-      (make-grid-box x y grid))))
 
 (defn make-marks [grid]
   (for [[cell mark] (:filled-by-cell grid)]
