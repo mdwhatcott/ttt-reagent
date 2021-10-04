@@ -6,7 +6,8 @@
       with-stubs stub]])
   (:require
     [speclj.core]
-    [ttt-reagent.components :as components]))
+    [ttt-reagent.components :as components]
+    [cljs.pprint :as pprint]))
 
 (defn parse-arena [arena grid-width]
   (let [box-count (* grid-width grid-width)]
@@ -49,7 +50,7 @@
               (should= :rect tag)
               (should= 0.9 (:width box-attributes))
               (should= 0.9 (:height box-attributes))
-              (should= :empty (:class box-attributes))))))
+              (should= :empty (:class box-attributes))))))  ; TODO: assert non-nil on-click
       )
 
     (context "after first turn by X"
